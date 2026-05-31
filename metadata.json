@@ -1,0 +1,7 @@
+{
+  "name": "Math Galaxy AI Learning",
+  "description": "A fun, galaxy-themed mathematics learning app for ages 11-14, featuring AI-powered homework help, interactive quizzes with 3 chatbot personalities, and revision modules.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
