@@ -2,8 +2,25 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ChatbotPersonality, QuizQuestion } from "../types";
 
-// Fix: Initializing GoogleGenAI with apiKey strictly from process.env.API_KEY as per guidelines
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+let aiInstance: GoogleGenAI | null = null;
+
+export const getGeminiClient = (): GoogleGenAI => {
+  if (!aiInstance) {
+    const key = process.env.API_KEY || process.env.GEMINI_API_KEY;
+    if (!key) {
+      throw new Error("Missing GEMINI_API_KEY environment variable. Please add it to your Vercel Project Environment Variables.");
+    }
+    aiInstance = new GoogleGenAI({
+      apiKey: key,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        }
+      }
+    });
+  }
+  return aiInstance;
+};
 
 const SYSTEM_CONSTRAINTS = `
 Target audience: 11-14 year olds (Junior and Senior High School).
@@ -15,9 +32,9 @@ Constraint 5: All math explanations must be step-by-step.
 `;
 
 export const getHomeworkHelp = async (question: string, imageBase64?: string) => {
-  // Fix: Directly awaiting the generateContent call and ensuring correct model/content parameters
+  const ai = getGeminiClient();
   const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
+    model: 'gemini-3.5-flash',
     contents: imageBase64 
       ? { parts: [{ text: question + " Explain this homework problem simply." }, { inlineData: { data: imageBase64, mimeType: 'image/jpeg' } }] }
       : question + " Explain this homework problem simply.",
@@ -29,9 +46,9 @@ export const getHomeworkHelp = async (question: string, imageBase64?: string) =>
 };
 
 export const generateQuiz = async (personality: ChatbotPersonality, topic: string): Promise<QuizQuestion[]> => {
-  // Fix: Direct generateContent call with responseSchema following Type enum
+  const ai = getGeminiClient();
   const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
+    model: 'gemini-3.5-flash',
     contents: `Generate 3 multiple-choice math questions about ${topic} for a student aged 11-14.`,
     config: {
       systemInstruction: SYSTEM_CONSTRAINTS + ` You are ${personality}. Speak in your specific style. 
@@ -57,9 +74,9 @@ export const generateQuiz = async (personality: ChatbotPersonality, topic: strin
 };
 
 export const getRevisionSummary = async (topicId: string) => {
-  // Fix: Direct generateContent call for revision content
+  const ai = getGeminiClient();
   const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
+    model: 'gemini-3.5-flash',
     contents: `Provide a simple, fun revision guide for ${topicId}. Include examples and a "Star Tip".`,
     config: {
       systemInstruction: SYSTEM_CONSTRAINTS + " You are a cosmic teacher helping students revise for their math exams.",

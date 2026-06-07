@@ -13,18 +13,20 @@ const QuizBot: React.FC = () => {
   const [score, setScore] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const startQuiz = async (p: ChatbotPersonality) => {
     setPersonality(p);
     setStep('loading');
+    setError(null);
     try {
       const data = await generateQuiz(p, topic);
       setQuestions(data);
       setCurrentIndex(0);
       setScore(0);
       setStep('quiz');
-    } catch (e) {
-      alert("Failed to reach base. Try again!");
+    } catch (e: any) {
+      setError(e?.message || "Failed to reach cosmic base. Please try again!");
       setStep('pick');
     }
   };
@@ -53,6 +55,14 @@ const QuizBot: React.FC = () => {
       <div className="max-w-4xl mx-auto p-4 text-center">
         <h2 className="text-3xl font-bold mb-4 text-cyan-400">Choose Your Quiz Commander</h2>
         <p className="text-slate-400 mb-8">Select a bot to challenge you in a math battle.</p>
+        
+        {error && (
+          <div className="mb-8 p-4 bg-red-950/45 border border-red-500/40 rounded-2xl text-red-200 text-sm max-w-lg mx-auto flex items-center gap-3 animate-in fade-in duration-300">
+            <span className="text-base">⚠️</span>
+            <span className="text-left flex-1">{error}</span>
+            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-200 font-bold px-1">✕</button>
+          </div>
+        )}
         
         <div className="mb-8 max-w-sm mx-auto">
           <label className="block text-left text-sm text-slate-400 mb-2">Battle Topic:</label>
