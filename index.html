@@ -6,10 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Galaxy AI Learning</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Tw Cen MT"', '"Twentieth Century"', '"Century Gothic"', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
     <style>
         body {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: "Tw Cen MT", "Twentieth Century", "Century Gothic", sans-serif;
             background-color: #020617;
             color: white;
             margin: 0;
