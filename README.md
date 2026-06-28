@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner"https://github.com/mackenziealgopeersai-lab/Math-Galaxy-AI-Learning/blob/9a18ca4e2ac1a7295351d2c6d4bee9d7885926e7/Screenshot%202026-06-28%20174310.png src=""/>
+<img width="1200" height="475" alt="GHBanner" src="h"/>
 </div>
 
 # Run and deploy your AI Studio app
